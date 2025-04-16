@@ -77,8 +77,8 @@ export async function POST(request: NextRequest) {
       creatorId: body.creatorId,
       tierAccess: body.tierAccess || 0,
       publishStatus: body.publishStatus || 'draft',
-      publishDate: body.publishStatus === 'published' ? new Date().toISOString().split('T')[0] : null,
-      featuredImage: body.featuredImage || null,
+      publishDate: body.publishStatus === 'published' ? new Date().toISOString().split('T')[0] : '',
+      featuredImage: body.featuredImage || '',
       views: 0
     };
     
