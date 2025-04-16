@@ -1,6 +1,5 @@
 import { PrismaClient } from '../../../src/generated/prisma';
-import { Adapter } from 'next-auth/adapters';
-import { AdapterUser } from 'next-auth/adapters';
+import { Adapter, AdapterSession, AdapterUser } from 'next-auth/adapters';
 
 interface CreateUserData {
   name?: string | null;
@@ -34,10 +33,16 @@ interface SessionData {
   expires: Date;
 }
 
+interface SessionUpdateData {
+  sessionToken: string;
+  userId?: string;
+  expires?: Date;
+}
+
 interface UpdateUserData {
   id: string;
   name?: string | null;
-  email?: string | null;
+  email?: string;
   image?: string | null;
   emailVerified?: Date | null;
 }
@@ -46,20 +51,6 @@ interface VerificationTokenData {
   identifier: string;
   token: string;
   expires: Date;
-}
-
-interface GetSessionAndUserParams {
-  sessionToken: string;
-}
-
-interface UseVerificationTokenParams {
-  identifier: string;
-  token: string;
-}
-
-interface GetUserByAccountParams {
-  providerAccountId: string;
-  provider: string;
 }
 
 export function PrismaAdapter(prisma: PrismaClient): Adapter {
@@ -111,7 +102,7 @@ export function PrismaAdapter(prisma: PrismaClient): Adapter {
         role: user.role,
       };
     },
-    getUserByAccount: async (params: GetUserByAccountParams) => {
+    getUserByAccount: async (params: { providerAccountId: string; provider: string }) => {
       const account = await prisma.account.findUnique({
         where: {
           provider_providerAccountId: {
@@ -172,9 +163,9 @@ export function PrismaAdapter(prisma: PrismaClient): Adapter {
       });
       return session;
     },
-    getSessionAndUser: async (params: GetSessionAndUserParams) => {
+    getSessionAndUser: async (sessionToken: string) => {
       const session = await prisma.session.findUnique({
-        where: { sessionToken: params.sessionToken },
+        where: { sessionToken },
         include: { user: true },
       });
       if (!session) return null;
@@ -191,7 +182,7 @@ export function PrismaAdapter(prisma: PrismaClient): Adapter {
         },
       };
     },
-    updateSession: async (data: SessionData) => {
+    updateSession: async (data: SessionUpdateData) => {
       const session = await prisma.session.update({
         where: { sessionToken: data.sessionToken },
         data,
@@ -209,7 +200,7 @@ export function PrismaAdapter(prisma: PrismaClient): Adapter {
       });
       return verificationToken;
     },
-    useVerificationToken: async (params: UseVerificationTokenParams) => {
+    useVerificationToken: async (params: { identifier: string; token: string }) => {
       try {
         const verificationToken = await prisma.verificationToken.delete({
           where: {
