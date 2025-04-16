@@ -79,7 +79,7 @@ const handler = NextAuth({
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({ user, account, profile, credentials }) {
       // Allow sign in if using credentials
       if (credentials) {
         return true;

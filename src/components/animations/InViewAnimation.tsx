@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode, useRef } from 'react';
-import { motion, useInView, Variant } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 
 interface InViewAnimationProps {
   children: ReactNode;
@@ -27,8 +27,9 @@ export default function InViewAnimation({
   const ref = useRef(null);
   const isInView = useInView(ref, {
     once,
-    amount: threshold, // 'amount' is the correct prop name, not 'threshold'
-    margin: margin as any // Type cast to fix TypeScript error
+    amount: threshold,
+    // @ts-ignore - framer-motion types are expecting a specific type but string works fine
+    margin
   });
 
   // Set initial and animate values based on direction

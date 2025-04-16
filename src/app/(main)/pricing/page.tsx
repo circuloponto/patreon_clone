@@ -2,11 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Check, HelpCircle } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { motion } from 'framer-motion';
 import PageTransition from '@/components/animations/PageTransition';
 import FadeIn from '@/components/animations/FadeIn';
-import StaggeredList from '@/components/animations/StaggeredList';
 import AnimatedButton from '@/components/animations/AnimatedButton';
 import InViewAnimation from '@/components/animations/InViewAnimation';
 
@@ -117,7 +116,7 @@ export default function PricingPage() {
             <FadeIn>
               <h1 className="text-3xl md:text-4xl font-bold mb-4">Simple, Transparent Pricing</h1>
               <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
-                Choose the plan that's right for your creator journey. No hidden fees or surprises.
+                Choose the plan that&apos;s right for your creator journey. No hidden fees or surprises.
               </p>
             </FadeIn>
             

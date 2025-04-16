@@ -5,7 +5,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import PageTransition from "@/components/animations/PageTransition";
 import FadeIn from "@/components/animations/FadeIn";
-import StaggeredList from "@/components/animations/StaggeredList";
 import AnimatedButton from "@/components/animations/AnimatedButton";
 import InViewAnimation from "@/components/animations/InViewAnimation";
 
@@ -181,12 +180,12 @@ export default function Home() {
             <div className="grid md:grid-cols-2 gap-8">
               {[
                 {
-                  quote: "This platform has completely changed how I create. I can now focus on quality content instead of chasing algorithms.",
+                  quote: "&ldquo;This platform has completely changed how I create. I can now focus on quality content instead of chasing algorithms.&rdquo;",
                   author: "Jessica K.",
                   role: "Podcaster"
                 },
                 {
-                  quote: "The direct connection with my supporters has been incredible. I've built a real community that values my work.",
+                  quote: "&ldquo;The direct connection with my supporters has been incredible. I've built a real community that values my work.&rdquo;",
                   author: "Michael T.",
                   role: "Writer"
                 }
@@ -197,7 +196,7 @@ export default function Home() {
                     whileHover={{ scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
                   >
-                    <p className="text-lg italic mb-6">"{testimonial.quote}"</p>
+                    <p className="text-lg italic mb-6">{testimonial.quote}</p>
                     <div className="flex items-center">
                       <div className="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
                       <div>

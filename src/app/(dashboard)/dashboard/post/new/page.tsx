@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Upload, Info } from 'lucide-react';
+import Image from 'next/image';
 
 // Mock membership tiers for access level selection
 const MEMBERSHIP_TIERS = [
@@ -113,7 +114,13 @@ export default function NewPostPage() {
               {previewImage ? (
                 <div className="space-y-1 text-center">
                   <div className="flex flex-col items-center">
-                    <img src={previewImage} alt="Preview" className="h-40 object-cover mb-3" />
+                    <Image 
+                      src={previewImage} 
+                      alt="Preview" 
+                      width={160} 
+                      height={160} 
+                      className="h-40 object-cover mb-3" 
+                    />
                     <button
                       type="button"
                       onClick={() => {
@@ -217,7 +224,7 @@ export default function NewPostPage() {
               className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded"
             />
             <label htmlFor="isDraft" className="ml-2 block text-sm text-gray-700">
-              Save as draft (won't be published immediately)
+              Save as draft (won&apos;t be published immediately)
             </label>
           </div>
           

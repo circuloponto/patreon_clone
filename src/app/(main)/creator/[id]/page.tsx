@@ -1,12 +1,43 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 // Mock creator data
-const MOCK_CREATORS = {
+interface Post {
+  id: number;
+  title: string;
+  excerpt: string;
+  date: string;
+  imageUrl: string;
+  isPublic: boolean;
+  tierAccess?: number;
+}
+
+interface MembershipTier {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  benefits: string[];
+}
+
+interface Creator {
+  id: number;
+  name: string;
+  category: string;
+  description: string;
+  longDescription: string;
+  coverImage: string;
+  profileImage: string;
+  monthlySubscribers: number;
+  monthlyIncome: string;
+  membershipTiers: MembershipTier[];
+  posts: Post[];
+}
+
+const MOCK_CREATORS: { [key: string]: Creator } = {
   '1': {
     id: 1,
     name: 'Sarah Johnson',
@@ -176,7 +207,7 @@ export default function CreatorProfile() {
   const params = useParams();
   const creatorId = params.id as string;
   
-  const [creator, setCreator] = useState<any>(null);
+  const [creator, setCreator] = useState<Creator | null>(null);
   const [selectedTier, setSelectedTier] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('posts'); // 'posts', 'about', 'membership'
@@ -202,7 +233,7 @@ export default function CreatorProfile() {
     return (
       <div className="min-h-screen bg-white flex flex-col justify-center items-center p-6">
         <h1 className="text-3xl font-bold text-gray-800 mb-4">Creator Not Found</h1>
-        <p className="text-gray-600 mb-8">The creator you're looking for doesn't exist or has been removed.</p>
+        <p className="text-gray-600 mb-8">The creator you&apos;re looking for doesn&apos;t exist or has been removed.</p>
         <Link href="/explore" className="bg-black hover:bg-gray-800 text-white font-medium py-2 px-6 rounded-md">
           Explore Other Creators
         </Link>
@@ -269,7 +300,7 @@ export default function CreatorProfile() {
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Recent Posts</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {creator.posts.map((post: any) => (
+                {creator.posts.map((post: Post) => (
                   <div key={post.id} className="bg-white rounded-md overflow-hidden shadow-sm border border-gray-200">
                     <div className="h-48 bg-gray-200 flex items-center justify-center">
                       <span className="text-gray-500">Post Image</span>
@@ -279,7 +310,7 @@ export default function CreatorProfile() {
                         <span className="text-sm text-gray-500">{post.date}</span>
                         {!post.isPublic && (
                           <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">
-                            {`${creator.membershipTiers.find((tier: any) => tier.id === post.tierAccess)?.name} Tier`}
+                            {`${creator.membershipTiers.find((tier: MembershipTier) => tier.id === post.tierAccess)?.name} Tier`}
                           </span>
                         )}
                       </div>
@@ -323,7 +354,7 @@ export default function CreatorProfile() {
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Become a Member</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {creator.membershipTiers.map((tier: any) => (
+                {creator.membershipTiers.map((tier: MembershipTier) => (
                   <div 
                     key={tier.id} 
                     className={`bg-white rounded-md overflow-hidden shadow-sm border ${selectedTier === tier.id ? 'border-black ring-2 ring-black' : 'border-gray-200'}`}
@@ -358,7 +389,7 @@ export default function CreatorProfile() {
                 <div className="mt-8 bg-white rounded-md shadow-sm border border-gray-200 p-8">
                   <h3 className="text-xl font-bold text-gray-900 mb-4">Complete Your Membership</h3>
                   <p className="text-gray-700 mb-6">
-                    You're joining {creator.name} at the {creator.membershipTiers.find((tier: any) => tier.id === selectedTier)?.name} tier for ${creator.membershipTiers.find((tier: any) => tier.id === selectedTier)?.price}/month.
+                    You&apos;re joining {creator.name} at the {creator.membershipTiers.find((tier: MembershipTier) => tier.id === selectedTier)?.name} tier for ${creator.membershipTiers.find((tier: MembershipTier) => tier.id === selectedTier)?.price}/month.
                   </p>
                   
                   <Link 

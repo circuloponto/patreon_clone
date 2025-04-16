@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
+import Image from 'next/image';
 import PageTransition from '@/components/animations/PageTransition';
 import FadeIn from '@/components/animations/FadeIn';
 import AnimatedButton from '@/components/animations/AnimatedButton';
@@ -104,9 +105,11 @@ export default function SettingsPage() {
                               transition={{ type: "spring", stiffness: 400, damping: 10 }}
                             >
                               {session?.user?.image ? (
-                                <img 
+                                <Image 
                                   src={session.user.image} 
                                   alt="Profile" 
+                                  width={64}
+                                  height={64}
                                   className="w-full h-full object-cover"
                                 />
                               ) : (

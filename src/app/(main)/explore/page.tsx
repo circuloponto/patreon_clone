@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import PageTransition from '@/components/animations/PageTransition';
 import FadeIn from '@/components/animations/FadeIn';
-import StaggeredList from '@/components/animations/StaggeredList';
 import AnimatedButton from '@/components/animations/AnimatedButton';
 import InViewAnimation from '@/components/animations/InViewAnimation';
 

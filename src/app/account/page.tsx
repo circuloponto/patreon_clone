@@ -2,14 +2,12 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import PageTransition from '@/components/animations/PageTransition';
 import FadeIn from '@/components/animations/FadeIn';
 
 export default function AccountPage() {
   const router = useRouter();
-  const { data: session } = useSession();
   
   // Redirect to settings page
   useEffect(() => {

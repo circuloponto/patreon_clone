@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 // Mock database for posts
 // In a real application, this would be stored in a database like MongoDB
-let posts = [
+const posts = [
   {
     id: '1',
     title: 'New Character Design: Forest Guardian',
