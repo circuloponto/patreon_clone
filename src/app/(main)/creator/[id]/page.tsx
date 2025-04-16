@@ -365,7 +365,7 @@ export default function CreatorProfile() {
                     href="/signup"
                     className="block w-full sm:w-auto sm:inline-block text-center bg-black hover:bg-gray-800 text-white font-medium py-3 px-8 rounded-md"
                   >
-                    Continue to Payment
+                    Join Membership
                   </Link>
                 </div>
               )}
