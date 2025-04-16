@@ -84,9 +84,9 @@ export default function SignUp() {
       }
       
       router.refresh();
-    } catch (err: any) {
+    } catch (err: Error | unknown) {
       console.error('Registration error:', err);
-      setError(err.message || 'Failed to create account. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to create account. Please try again.');
     } finally {
       setIsLoading(false);
     }

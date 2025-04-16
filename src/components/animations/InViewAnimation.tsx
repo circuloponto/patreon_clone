@@ -28,7 +28,7 @@ export default function InViewAnimation({
   const isInView = useInView(ref, {
     once,
     amount: threshold,
-    // @ts-ignore - framer-motion types are expecting a specific type but string works fine
+    // @ts-expect-error - framer-motion types are expecting a specific type but string works fine
     margin
   });
 

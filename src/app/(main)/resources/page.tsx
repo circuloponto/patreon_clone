@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { Search, BookOpen, Video, FileText, Users, Award, ArrowRight } from 'lucide-react';
+import { Search, BookOpen, Video, FileText, Award, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import PageTransition from '@/components/animations/PageTransition';
 import FadeIn from '@/components/animations/FadeIn';
