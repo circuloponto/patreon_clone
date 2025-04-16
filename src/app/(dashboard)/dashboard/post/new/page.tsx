@@ -18,7 +18,7 @@ export default function NewPostPage() {
     content: '',
     excerpt: '',
     accessLevel: 'public',
-    featuredImage: null,
+    featuredImage: null as File | null,
     isDraft: false,
   });
   
