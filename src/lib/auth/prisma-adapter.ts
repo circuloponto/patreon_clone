@@ -124,9 +124,12 @@ export function PrismaAdapter(prisma: PrismaClient): Adapter {
       };
     },
     updateUser: async (data: UpdateUserData) => {
+      // Extract the id from data and create a new object without id for the update
+      const { id, ...userData } = data;
+      
       const user = await prisma.user.update({
-        where: { id: data.id },
-        data,
+        where: { id },
+        data: userData,
       });
       return {
         id: user.id,
