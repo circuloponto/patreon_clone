@@ -1,9 +1,9 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, HTMLMotionProps } from 'framer-motion';
 import { ButtonHTMLAttributes, ReactNode } from 'react';
 
-interface AnimatedButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface AnimatedButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onDrag'> {
   children: ReactNode;
   variant?: 'primary' | 'secondary' | 'outline' | 'danger';
   fullWidth?: boolean;
@@ -15,7 +15,7 @@ export default function AnimatedButton({
   fullWidth = false,
   className = '',
   ...props 
-}: AnimatedButtonProps) {
+}: AnimatedButtonProps & HTMLMotionProps<'button'>) {
   
   // Define base styles based on variant
   const getBaseStyles = () => {
