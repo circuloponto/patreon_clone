@@ -1,18 +1,7 @@
-import { Metadata } from 'next';
 import CreatorProfile from '@/components/creator/CreatorProfile';
 
-type Props = {
-  params: { id: string };
-};
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  return {
-    title: `Creator ${params.id}`,
-    description: 'Creator profile page',
-  };
-}
-
-export default async function CreatorPage({ params }: Props) {
+// Define the page component
+export default function CreatorPage({ params }: { params: { id: string } }) {
   // Simulate fetching creator data
   const creator = {
     id: params.id,
