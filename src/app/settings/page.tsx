@@ -1,315 +1,319 @@
 'use client';
 
 import { useState } from 'react';
-import { useSession } from 'next-auth/react';
-import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import PageTransition from '@/components/animations/PageTransition';
 import FadeIn from '@/components/animations/FadeIn';
 import AnimatedButton from '@/components/animations/AnimatedButton';
-import StaggeredList from '@/components/animations/StaggeredList';
-import { motion } from 'framer-motion';
 
 export default function SettingsPage() {
-  const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState('profile');
 
-  const tabOptions = [
+  const mockSettings = {
+    notifications: {
+      email: {
+        newSubscriber: true,
+        newComment: true,
+        newMessage: true,
+        paymentReceived: true,
+        newsletter: false,
+        promotions: false
+      },
+      push: {
+        newSubscriber: true,
+        newComment: false,
+        newMessage: true,
+        paymentReceived: true
+      }
+    },
+    security: {
+      twoFactorEnabled: false,
+      lastPasswordChange: "2025-03-15",
+      loginHistory: [
+        { date: "2025-04-29", device: "Chrome on MacOS", location: "Lisbon, Portugal" },
+        { date: "2025-04-28", device: "Safari on iPhone", location: "Lisbon, Portugal" },
+        { date: "2025-04-27", device: "Chrome on MacOS", location: "Lisbon, Portugal" }
+      ],
+      connectedDevices: [
+        { name: "MacBook Pro", lastActive: "Now", browser: "Chrome", os: "MacOS" },
+        { name: "iPhone 15", lastActive: "1 hour ago", browser: "Safari", os: "iOS" }
+      ]
+    },
+    payment: {
+      defaultCard: {
+        type: "Visa",
+        last4: "4242",
+        expiry: "12/26"
+      },
+      payoutMethod: {
+        type: "Bank Account",
+        last4: "9876",
+        country: "Portugal"
+      },
+      payoutSchedule: "Monthly",
+      minimumPayout: "$50.00",
+      currency: "USD",
+      taxInfo: {
+        status: "Submitted",
+        form: "W-9",
+        lastUpdated: "2025-03-01"
+      }
+    }
+  };
+
+  const tabs = [
     { id: 'profile', label: 'Profile' },
-    { id: 'account', label: 'Account' },
     { id: 'notifications', label: 'Notifications' },
     { id: 'security', label: 'Security' },
+    { id: 'payment', label: 'Payment' }
   ];
 
-  // Add payment settings tab for creators
-  if (session?.user?.role === 'creator') {
-    tabOptions.push({ id: 'payments', label: 'Payment Settings' });
-  }
-
   return (
-    <ProtectedRoute>
-      <PageTransition>
-        <div className="container mx-auto py-8 px-4 max-w-6xl">
+    <PageTransition>
+      <div className="min-h-screen bg-white py-12">
+        <div className="container mx-auto px-6 max-w-4xl">
           <FadeIn>
-            <h1 className="text-3xl font-bold mb-8">Account Settings</h1>
-          </FadeIn>
-          
-          <div className="flex flex-col md:flex-row gap-8">
-            {/* Sidebar */}
-            <div className="w-full md:w-1/4">
-              <FadeIn delay={0.1} direction="left">
-                <div className="bg-white shadow-sm rounded-lg border border-gray-200">
-                  <div className="p-4 border-b border-gray-200">
-                    <h2 className="font-semibold text-lg">Settings</h2>
+            <h1 className="text-3xl font-bold mb-8">Settings</h1>
+
+            {/* Tabs */}
+            <div className="border-b border-gray-200 mb-8">
+              <nav className="flex space-x-8">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                      activeTab === tab.id
+                        ? 'border-black text-black'
+                        : 'border-transparent text-gray-500 hover:text-black hover:border-gray-300'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </nav>
+            </div>
+
+            {/* Profile Settings */}
+            {activeTab === 'profile' && (
+              <div className="space-y-6">
+                <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
+                  <h2 className="text-lg font-bold mb-4">Profile Information</h2>
+                  <div className="grid grid-cols-1 gap-6">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Display Name
+                      </label>
+                      <input
+                        type="text"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        defaultValue="Sarah Anderson"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        defaultValue="sarah.anderson@example.com"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Bio
+                      </label>
+                      <textarea
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        rows={4}
+                        defaultValue="Digital artist and content creator passionate about sharing creative knowledge."
+                      />
+                    </div>
                   </div>
-                  <div className="p-2">
-                    <StaggeredList>
-                      {tabOptions.map((tab) => (
-                        <button 
-                          key={tab.id}
-                          onClick={() => setActiveTab(tab.id)}
-                          className={`w-full text-left px-4 py-2 rounded-md ${activeTab === tab.id ? 'bg-gray-100 font-medium' : 'hover:bg-gray-50'}`}
-                        >
-                          {tab.label}
+                </div>
+              </div>
+            )}
+
+            {/* Notification Settings */}
+            {activeTab === 'notifications' && (
+              <div className="space-y-6">
+                <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
+                  <h2 className="text-lg font-bold mb-4">Email Notifications</h2>
+                  <div className="space-y-4">
+                    {Object.entries(mockSettings.notifications.email).map(([key, value]) => (
+                      <div key={key} className="flex items-center justify-between">
+                        <span className="text-sm font-medium capitalize">
+                          {key.replace(/([A-Z])/g, ' $1').trim()}
+                        </span>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            defaultChecked={value}
+                            className="sr-only peer"
+                          />
+                          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-black"></div>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
+                  <h2 className="text-lg font-bold mb-4">Push Notifications</h2>
+                  <div className="space-y-4">
+                    {Object.entries(mockSettings.notifications.push).map(([key, value]) => (
+                      <div key={key} className="flex items-center justify-between">
+                        <span className="text-sm font-medium capitalize">
+                          {key.replace(/([A-Z])/g, ' $1').trim()}
+                        </span>
+                        <label className="relative inline-flex items-center cursor-pointer">
+                          <input
+                            type="checkbox"
+                            defaultChecked={value}
+                            className="sr-only peer"
+                          />
+                          <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-black"></div>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Security Settings */}
+            {activeTab === 'security' && (
+              <div className="space-y-6">
+                <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
+                  <div className="flex justify-between items-start mb-6">
+                    <div>
+                      <h2 className="text-lg font-bold">Two-Factor Authentication</h2>
+                      <p className="text-sm text-gray-500 mt-1">
+                        Add an extra layer of security to your account
+                      </p>
+                    </div>
+                    <AnimatedButton variant={mockSettings.security.twoFactorEnabled ? "outline" : "default"}>
+                      {mockSettings.security.twoFactorEnabled ? 'Disable' : 'Enable'}
+                    </AnimatedButton>
+                  </div>
+                  
+                  <div className="border-t border-gray-200 pt-6">
+                    <h3 className="text-sm font-medium mb-2">Password</h3>
+                    <p className="text-sm text-gray-500 mb-4">
+                      Last changed: {mockSettings.security.lastPasswordChange}
+                    </p>
+                    <AnimatedButton variant="outline">Change Password</AnimatedButton>
+                  </div>
+                </div>
+
+                <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
+                  <h2 className="text-lg font-bold mb-4">Connected Devices</h2>
+                  <div className="space-y-4">
+                    {mockSettings.security.connectedDevices.map((device, index) => (
+                      <div key={index} className="flex justify-between items-center">
+                        <div>
+                          <h3 className="text-sm font-medium">{device.name}</h3>
+                          <p className="text-sm text-gray-500">
+                            {device.browser} on {device.os} • {device.lastActive}
+                          </p>
+                        </div>
+                        <button className="text-sm text-red-600 hover:text-red-800">
+                          Disconnect
                         </button>
-                      ))}
-                    </StaggeredList>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </FadeIn>
-            </div>
-            
-            {/* Main Content */}
-            <div className="w-full md:w-3/4">
-              <FadeIn delay={0.2} direction="right">
-                <div className="bg-white shadow-sm rounded-lg border border-gray-200 p-6">
-                  {activeTab === 'profile' && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <h2 className="text-xl font-semibold mb-4">Profile Settings</h2>
-                      <div className="space-y-4">
+
+                <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
+                  <h2 className="text-lg font-bold mb-4">Recent Login Activity</h2>
+                  <div className="space-y-4">
+                    {mockSettings.security.loginHistory.map((login, index) => (
+                      <div key={index} className="flex justify-between items-center">
                         <div>
-                          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                            Name
-                          </label>
-                          <input
-                            type="text"
-                            id="name"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                            defaultValue={session?.user?.name || ''}
-                          />
-                        </div>
-                        <div>
-                          <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-1">
-                            Bio
-                          </label>
-                          <textarea
-                            id="bio"
-                            rows={4}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                            placeholder="Tell us about yourself..."
-                          />
-                        </div>
-                        <div>
-                          <label htmlFor="profilePicture" className="block text-sm font-medium text-gray-700 mb-1">
-                            Profile Picture
-                          </label>
-                          <div className="flex items-center space-x-4">
-                            <motion.div 
-                              className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden"
-                              whileHover={{ scale: 1.05 }}
-                              transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                            >
-                              {session?.user?.image ? (
-                                <img 
-                                  src={session.user.image} 
-                                  alt="Profile" 
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <span className="text-lg font-medium">
-                                  {session?.user?.name?.charAt(0).toUpperCase() || 'U'}
-                                </span>
-                              )}
-                            </motion.div>
-                            <AnimatedButton variant="outline">
-                              Change
-                            </AnimatedButton>
-                          </div>
-                        </div>
-                        <div className="pt-4">
-                          <AnimatedButton>
-                            Save Changes
-                          </AnimatedButton>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                  
-                  {activeTab === 'account' && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <h2 className="text-xl font-semibold mb-4">Account Settings</h2>
-                      <div className="space-y-4">
-                        <div>
-                          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                            Email Address
-                          </label>
-                          <input
-                            type="email"
-                            id="email"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                            defaultValue={session?.user?.email || ''}
-                            disabled
-                          />
-                          <p className="text-sm text-gray-500 mt-1">
-                            To change your email, please contact support.
+                          <p className="text-sm font-medium">{login.device}</p>
+                          <p className="text-sm text-gray-500">
+                            {login.location} • {login.date}
                           </p>
                         </div>
-                        <div>
-                          <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
-                            Username
-                          </label>
-                          <input
-                            type="text"
-                            id="username"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                            placeholder="Choose a username"
-                          />
-                        </div>
-                        <div className="pt-4">
-                          <AnimatedButton>
-                            Save Changes
-                          </AnimatedButton>
-                        </div>
                       </div>
-                    </motion.div>
-                  )}
-                  
-                  {activeTab === 'notifications' && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <h2 className="text-xl font-semibold mb-4">Notification Preferences</h2>
-                      <StaggeredList className="space-y-4">
-                        {[
-                          {
-                            id: 'emailToggle',
-                            title: 'Email Notifications',
-                            description: 'Receive updates via email',
-                            defaultChecked: false
-                          },
-                          {
-                            id: 'postToggle',
-                            title: 'New Post Notifications',
-                            description: 'Get notified when creators you support post new content',
-                            defaultChecked: true
-                          },
-                          {
-                            id: 'marketingToggle',
-                            title: 'Marketing Communications',
-                            description: 'Receive promotional emails and offers',
-                            defaultChecked: false
-                          }
-                        ].map((notification) => (
-                          <div key={notification.id} className="flex items-center justify-between">
-                            <div>
-                              <h3 className="font-medium">{notification.title}</h3>
-                              <p className="text-sm text-gray-500">{notification.description}</p>
-                            </div>
-                            <motion.div 
-                              className="relative inline-block w-12 mr-2 align-middle select-none"
-                              whileTap={{ scale: 0.95 }}
-                            >
-                              <input type="checkbox" id={notification.id} className="sr-only" defaultChecked={notification.defaultChecked} />
-                              <label 
-                                htmlFor={notification.id} 
-                                className="block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
-                              ></label>
-                            </motion.div>
-                          </div>
-                        ))}
-                      </StaggeredList>
-                      <div className="pt-6">
-                        <AnimatedButton>
-                          Save Preferences
-                        </AnimatedButton>
-                      </div>
-                    </motion.div>
-                  )}
-                  
-                  {activeTab === 'security' && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <h2 className="text-xl font-semibold mb-4">Security Settings</h2>
-                      <div className="space-y-4">
-                        <div>
-                          <h3 className="font-medium mb-2">Change Password</h3>
-                          <StaggeredList className="space-y-3">
-                            {[
-                              { id: 'currentPassword', label: 'Current Password' },
-                              { id: 'newPassword', label: 'New Password' },
-                              { id: 'confirmPassword', label: 'Confirm New Password' }
-                            ].map((field) => (
-                              <div key={field.id}>
-                                <label htmlFor={field.id} className="block text-sm font-medium text-gray-700 mb-1">
-                                  {field.label}
-                                </label>
-                                <input
-                                  type="password"
-                                  id={field.id}
-                                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                                />
-                              </div>
-                            ))}
-                          </StaggeredList>
-                        </div>
-                        <div className="pt-4">
-                          <AnimatedButton>
-                            Update Password
-                          </AnimatedButton>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                  
-                  {activeTab === 'payments' && session?.user?.role === 'creator' && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <h2 className="text-xl font-semibold mb-4">Payment Settings</h2>
-                      <div className="space-y-4">
-                        <div>
-                          <h3 className="font-medium mb-2">Payout Method</h3>
-                          <p className="text-sm text-gray-500 mb-3">
-                            Choose how you want to receive your earnings
-                          </p>
-                          <select className="w-full px-3 py-2 border border-gray-300 rounded-md">
-                            <option>Bank Transfer</option>
-                            <option>PayPal</option>
-                            <option>Stripe</option>
-                          </select>
-                        </div>
-                        <div>
-                          <h3 className="font-medium mb-2">Tax Information</h3>
-                          <p className="text-sm text-gray-500 mb-3">
-                            Required for creators earning income on the platform
-                          </p>
-                          <AnimatedButton variant="outline">
-                            Update Tax Information
-                          </AnimatedButton>
-                        </div>
-                        <div className="pt-4">
-                          <AnimatedButton>
-                            Save Payment Settings
-                          </AnimatedButton>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
+                    ))}
+                  </div>
                 </div>
-              </FadeIn>
+              </div>
+            )}
+
+            {/* Payment Settings */}
+            {activeTab === 'payment' && (
+              <div className="space-y-6">
+                <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
+                  <div className="flex justify-between items-start mb-6">
+                    <div>
+                      <h2 className="text-lg font-bold">Payment Method</h2>
+                      <p className="text-sm text-gray-500 mt-1">
+                        {mockSettings.payment.defaultCard.type} ending in {mockSettings.payment.defaultCard.last4}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Expires {mockSettings.payment.defaultCard.expiry}
+                      </p>
+                    </div>
+                    <AnimatedButton variant="outline">Update</AnimatedButton>
+                  </div>
+
+                  <div className="border-t border-gray-200 pt-6">
+                    <h2 className="text-lg font-bold mb-4">Payout Settings</h2>
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-sm font-medium">Payout Method</p>
+                        <p className="text-sm text-gray-500">
+                          {mockSettings.payment.payoutMethod.type} ending in {mockSettings.payment.payoutMethod.last4}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Payout Schedule</p>
+                        <p className="text-sm text-gray-500">{mockSettings.payment.payoutSchedule}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Minimum Payout Amount</p>
+                        <p className="text-sm text-gray-500">{mockSettings.payment.minimumPayout}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Currency</p>
+                        <p className="text-sm text-gray-500">{mockSettings.payment.currency}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6">
+                  <h2 className="text-lg font-bold mb-4">Tax Information</h2>
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-sm font-medium">Tax Form</p>
+                      <p className="text-sm text-gray-500">{mockSettings.payment.taxInfo.form}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">Status</p>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        {mockSettings.payment.taxInfo.status}
+                      </span>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium">Last Updated</p>
+                      <p className="text-sm text-gray-500">{mockSettings.payment.taxInfo.lastUpdated}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Save Button */}
+            <div className="mt-8">
+              <AnimatedButton>Save Changes</AnimatedButton>
             </div>
-          </div>
+          </FadeIn>
         </div>
-      </PageTransition>
-    </ProtectedRoute>
+      </div>
+    </PageTransition>
   );
 }

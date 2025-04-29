@@ -2,18 +2,12 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { useSession, signOut } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Navbar() {
-  const { data: session, status } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
-
-  const isLoggedIn = status === 'authenticated';
-  const isCreator = session?.user?.role === 'creator';
 
   // Close user menu when clicking outside
   useEffect(() => {
@@ -52,248 +46,177 @@ export default function Navbar() {
               Resources
             </Link>
             
-            {!isLoggedIn ? (
-              <>
-                <Link href="/login" className="text-gray-800 hover:text-black font-medium">
-                  Login
-                </Link>
-                <Link 
-                  href="/signup" 
-                  className="bg-black hover:bg-gray-800 text-white font-medium py-2 px-4 rounded-md"
+            {/* User Menu */}
+            <div className="relative" ref={userMenuRef}>
+              <button 
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                className="flex items-center space-x-2 text-gray-800 hover:text-black focus:outline-none"
+              >
+                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                  <span className="text-sm font-medium">U</span>
+                </div>
+                <span className="font-medium hidden sm:inline-block">
+                  User
+                </span>
+                <svg 
+                  className="w-4 h-4" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
                 >
-                  Sign Up
-                </Link>
-              </>
-            ) : (
-              <div className="relative" ref={userMenuRef}>
-                <button 
-                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center space-x-2 text-gray-800 hover:text-black focus:outline-none"
-                >
-                  <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-                    {session.user?.image ? (
-                      <Image 
-                        src={session.user.image} 
-                        alt="Profile" 
-                        width={32} 
-                        height={32}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-sm font-medium">
-                        {session.user?.name?.charAt(0).toUpperCase() || 'U'}
-                      </span>
-                    )}
-                  </div>
-                  <span className="font-medium hidden sm:inline-block">
-                    {session.user?.name?.split(' ')[0] || 'User'}
-                  </span>
-                  <svg 
-                    className="w-4 h-4" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d={isUserMenuOpen ? "M5 15l7-7 7 7" : "M19 9l-7 7-7-7"} 
+                  />
+                </svg>
+              </button>
+              
+              {/* User Dropdown Menu */}
+              <AnimatePresence>
+                {isUserMenuOpen && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200"
                   >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={2} 
-                      d={isUserMenuOpen ? "M5 15l7-7 7 7" : "M19 9l-7 7-7-7"} 
-                    />
-                  </svg>
-                </button>
-                
-                {/* User Dropdown Menu */}
-                <AnimatePresence>
-                  {isUserMenuOpen && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200"
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ staggerChildren: 0.05, delayChildren: 0.05 }}
                     >
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ staggerChildren: 0.05, delayChildren: 0.05 }}
-                      >
-                        <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
-                          <Link 
-                            href="/profile" 
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => setIsUserMenuOpen(false)}
-                          >
-                            Your Profile
-                          </Link>
-                        </motion.div>
-                        <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
-                          <Link 
-                            href="/account" 
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => setIsUserMenuOpen(false)}
-                          >
-                            Account Settings
-                          </Link>
-                        </motion.div>
-                        {isCreator && (
-                          <>
-                            <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
-                              <Link 
-                                href="/dashboard" 
-                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                onClick={() => setIsUserMenuOpen(false)}
-                              >
-                                Creator Dashboard
-                              </Link>
-                            </motion.div>
-                            <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
-                              <Link 
-                                href="/post/create" 
-                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                onClick={() => setIsUserMenuOpen(false)}
-                              >
-                                Create Post
-                              </Link>
-                            </motion.div>
-                            <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
-                              <Link 
-                                href="/earnings" 
-                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                onClick={() => setIsUserMenuOpen(false)}
-                              >
-                                Earnings
-                              </Link>
-                            </motion.div>
-                          </>
-                        )}
-                        <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
-                          <div className="border-t border-gray-100 my-1"></div>
-                          <button 
-                            onClick={() => {
-                              signOut({ callbackUrl: '/' });
-                              setIsUserMenuOpen(false);
-                            }}
-                            className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                          >
-                            Sign Out
-                          </button>
-                        </motion.div>
+                      <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
+                        <Link 
+                          href="/profile" 
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          Your Profile
+                        </Link>
+                      </motion.div>
+                      <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
+                        <Link 
+                          href="/account" 
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          Account Settings
+                        </Link>
+                      </motion.div>
+                      <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
+                        <Link 
+                          href="/dashboard" 
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          Creator Dashboard
+                        </Link>
+                      </motion.div>
+                      <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
+                        <Link 
+                          href="/post/create" 
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          Create Post
+                        </Link>
+                      </motion.div>
+                      <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
+                        <Link 
+                          href="/earnings" 
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          Earnings
+                        </Link>
                       </motion.div>
                     </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center">
-            {isLoggedIn && (
-              <div className="relative mr-4" ref={userMenuRef}>
-                <button 
-                  onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center text-gray-800 hover:text-black focus:outline-none"
-                >
-                  <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-                    {session.user?.image ? (
-                      <Image 
-                        src={session.user.image} 
-                        alt="Profile" 
-                        width={32} 
-                        height={32}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <span className="text-sm font-medium">
-                        {session.user?.name?.charAt(0).toUpperCase() || 'U'}
-                      </span>
-                    )}
-                  </div>
-                </button>
-                
-                {/* Mobile User Dropdown Menu */}
-                <AnimatePresence>
-                  {isUserMenuOpen && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200"
+            <div className="relative mr-4" ref={userMenuRef}>
+              <button 
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                className="flex items-center text-gray-800 hover:text-black focus:outline-none"
+              >
+                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                  <span className="text-sm font-medium">U</span>
+                </div>
+              </button>
+              
+              {/* Mobile User Dropdown Menu */}
+              <AnimatePresence>
+                {isUserMenuOpen && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200"
+                  >
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ staggerChildren: 0.05, delayChildren: 0.05 }}
                     >
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ staggerChildren: 0.05, delayChildren: 0.05 }}
-                      >
-                        <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
-                          <Link 
-                            href="/profile" 
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => setIsUserMenuOpen(false)}
-                          >
-                            Your Profile
-                          </Link>
-                        </motion.div>
-                        <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
-                          <Link 
-                            href="/account" 
-                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            onClick={() => setIsUserMenuOpen(false)}
-                          >
-                            Account Settings
-                          </Link>
-                        </motion.div>
-                        {isCreator && (
-                          <>
-                            <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
-                              <Link 
-                                href="/dashboard" 
-                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                onClick={() => setIsUserMenuOpen(false)}
-                              >
-                                Creator Dashboard
-                              </Link>
-                            </motion.div>
-                            <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
-                              <Link 
-                                href="/post/create" 
-                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                onClick={() => setIsUserMenuOpen(false)}
-                              >
-                                Create Post
-                              </Link>
-                            </motion.div>
-                            <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
-                              <Link 
-                                href="/earnings" 
-                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                onClick={() => setIsUserMenuOpen(false)}
-                              >
-                                Earnings
-                              </Link>
-                            </motion.div>
-                          </>
-                        )}
-                        <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
-                          <div className="border-t border-gray-100 my-1"></div>
-                          <button 
-                            onClick={() => {
-                              signOut({ callbackUrl: '/' });
-                              setIsUserMenuOpen(false);
-                            }}
-                            className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
-                          >
-                            Sign Out
-                          </button>
-                        </motion.div>
+                      <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
+                        <Link 
+                          href="/profile" 
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          Your Profile
+                        </Link>
+                      </motion.div>
+                      <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
+                        <Link 
+                          href="/account" 
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          Account Settings
+                        </Link>
+                      </motion.div>
+                      <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
+                        <Link 
+                          href="/dashboard" 
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          Creator Dashboard
+                        </Link>
+                      </motion.div>
+                      <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
+                        <Link 
+                          href="/post/create" 
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          Create Post
+                        </Link>
+                      </motion.div>
+                      <motion.div variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}>
+                        <Link 
+                          href="/earnings" 
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          Earnings
+                        </Link>
                       </motion.div>
                     </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-gray-800 hover:text-black focus:outline-none"
@@ -349,24 +272,6 @@ export default function Navbar() {
               >
                 Resources
               </Link>
-              {!isLoggedIn && (
-                <>
-                  <Link 
-                    href="/login" 
-                    className="text-gray-800 hover:text-black font-medium py-2"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Login
-                  </Link>
-                  <Link 
-                    href="/signup" 
-                    className="bg-black hover:bg-gray-800 text-white font-medium py-2 px-4 rounded-md inline-block"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Sign Up
-                  </Link>
-                </>
-              )}
             </div>
           </div>
         )}
