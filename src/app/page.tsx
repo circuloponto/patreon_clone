@@ -5,7 +5,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import PageTransition from "@/components/animations/PageTransition";
 import FadeIn from "@/components/animations/FadeIn";
-import StaggeredList from "@/components/animations/StaggeredList";
 import AnimatedButton from "@/components/animations/AnimatedButton";
 import InViewAnimation from "@/components/animations/InViewAnimation";
 
@@ -197,7 +196,7 @@ export default function Home() {
                     whileHover={{ scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 300, damping: 15 }}
                   >
-                    <p className="text-lg italic mb-6">"{testimonial.quote}"</p>
+                    <p className="text-lg italic mb-6">&apos;{testimonial.quote}&apos;</p>
                     <div className="flex items-center">
                       <div className="w-12 h-12 bg-gray-300 rounded-full mr-4"></div>
                       <div>

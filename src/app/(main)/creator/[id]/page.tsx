@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
 import { Heart, Share2, MessageCircle } from 'lucide-react';
 import PageTransition from '@/components/animations/PageTransition';
 import FadeIn from '@/components/animations/FadeIn';
@@ -122,7 +121,7 @@ export default function CreatorPage({ params }: { params: { id: string } }) {
 
             {/* Membership Tiers */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-              {tiers.map((tier, index) => (
+              {tiers.map((tier) => (
                 <div
                   key={tier.name}
                   className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow"
@@ -133,8 +132,8 @@ export default function CreatorPage({ params }: { params: { id: string } }) {
                     <span className="text-lg font-normal text-gray-600">/mo</span>
                   </div>
                   <ul className="space-y-3 mb-6">
-                    {tier.benefits.map((benefit, i) => (
-                      <li key={i} className="flex items-center text-gray-600">
+                    {tier.benefits.map((benefit) => (
+                      <li key={benefit} className="flex items-center text-gray-600">
                         <Heart className="w-5 h-5 text-pink-500 mr-2" />
                         {benefit}
                       </li>

@@ -1,60 +1,54 @@
 'use client';
 
-import { ReactNode, useRef } from 'react';
-import { motion, useInView, Variant } from 'framer-motion';
+import { ReactNode } from 'react';
+import { motion, useInView, Variants } from 'framer-motion';
+import { useRef } from 'react';
 
 interface InViewAnimationProps {
   children: ReactNode;
   delay?: number;
-  direction?: 'up' | 'down' | 'left' | 'right' | 'none';
-  duration?: number;
-  once?: boolean;
+  direction?: 'up' | 'down' | 'left' | 'right';
   className?: string;
-  threshold?: number;
-  margin?: string;
+  style?: React.CSSProperties;
 }
 
 export default function InViewAnimation({
   children,
   delay = 0,
   direction = 'up',
-  duration = 0.5,
-  once = true,
   className = '',
-  threshold = 0.1,
-  margin = '0px'
+  style = {}
 }: InViewAnimationProps) {
   const ref = useRef(null);
-  const isInView = useInView(ref, {
-    once,
-    amount: threshold, // 'amount' is the correct prop name, not 'threshold'
-    margin: margin as any // Type cast to fix TypeScript error
+  const isInView = useInView(ref, { once: true });
+
+  const getVariants = (direction: string): Variants => ({
+    hidden: {
+      opacity: 0,
+      ...(direction === 'up' ? { y: 50 } :
+         direction === 'down' ? { y: -50 } :
+         direction === 'left' ? { x: 50 } :
+         direction === 'right' ? { x: -50 } : {})
+    },
+    visible: {
+      opacity: 1,
+      y: direction === 'up' || direction === 'down' ? 0 : undefined,
+      x: direction === 'left' || direction === 'right' ? 0 : undefined,
+      transition: {
+        duration: 0.5,
+        delay
+      }
+    }
   });
-
-  // Set initial and animate values based on direction
-  let initial: Record<string, number> = { opacity: 0 };
-  if (direction === 'up') initial = { ...initial, y: 50 };
-  if (direction === 'down') initial = { ...initial, y: -50 };
-  if (direction === 'left') initial = { ...initial, x: 50 };
-  if (direction === 'right') initial = { ...initial, x: -50 };
-
-  const animate: Record<string, number> = { 
-    opacity: 1,
-    ...(direction === 'up' || direction === 'down' ? { y: 0 } : {}),
-    ...(direction === 'left' || direction === 'right' ? { x: 0 } : {})
-  };
 
   return (
     <motion.div
       ref={ref}
-      initial={initial}
-      animate={isInView ? animate : initial}
-      transition={{
-        duration,
-        delay,
-        ease: 'easeOut'
-      }}
+      variants={getVariants(direction)}
+      initial="hidden"
+      animate={isInView ? 'visible' : 'hidden'}
       className={className}
+      style={style}
     >
       {children}
     </motion.div>

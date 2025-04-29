@@ -1,8 +1,9 @@
 'use client';
 
+import { useState } from 'react';
+import { Search } from 'lucide-react';
 import PageTransition from '@/components/animations/PageTransition';
 import FadeIn from '@/components/animations/FadeIn';
-import AnimatedButton from '@/components/animations/AnimatedButton';
 
 export default function SubscribersPage() {
   const mockSubscribers = [
