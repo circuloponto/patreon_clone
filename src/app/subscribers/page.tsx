@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-import { Search } from 'lucide-react';
 import PageTransition from '@/components/animations/PageTransition';
 import FadeIn from '@/components/animations/FadeIn';
 
