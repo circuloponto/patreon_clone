@@ -1,10 +1,15 @@
+'use client';
+
+import { useParams } from 'next/navigation';
 import CreatorProfile from '@/components/creator/CreatorProfile';
 
-// Define the page component
-export default function CreatorPage({ params }: { params: { id: string } }) {
+export default function CreatorPage() {
+  const params = useParams();
+  const id = params?.id as string;
+
   // Simulate fetching creator data
   const creator = {
-    id: params.id,
+    id: id,
     name: "Jane Creator",
     handle: "@janecreator",
     bio: "Digital artist and storyteller. Creating worlds through pixels and imagination.",
