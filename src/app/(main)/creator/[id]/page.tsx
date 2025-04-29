@@ -1,15 +1,19 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
 import { Heart, Share2, MessageCircle } from 'lucide-react';
 import PageTransition from '@/components/animations/PageTransition';
 import FadeIn from '@/components/animations/FadeIn';
 import AnimatedButton from '@/components/animations/AnimatedButton';
 
-export default function CreatorPage({ params }: { params: { id: string } }) {
-  const [isFollowing, setIsFollowing] = useState(false);
+interface PageProps {
+  params: {
+    id: string;
+  };
+  searchParams?: { [key: string]: string | string[] | undefined };
+}
 
+export default function CreatorPage({ params, searchParams }: PageProps) {
   const creator = {
     id: params.id,
     name: "Jane Creator",
@@ -100,11 +104,8 @@ export default function CreatorPage({ params }: { params: { id: string } }) {
                   </div>
 
                   <div className="flex flex-wrap justify-center md:justify-start gap-4">
-                    <AnimatedButton
-                      variant={isFollowing ? "outline" : "primary"}
-                      onClick={() => setIsFollowing(!isFollowing)}
-                    >
-                      {isFollowing ? "Following" : "Follow"}
+                    <AnimatedButton variant="primary">
+                      Follow
                     </AnimatedButton>
                     <AnimatedButton variant="outline">
                       <MessageCircle className="w-5 h-5 mr-2" />
