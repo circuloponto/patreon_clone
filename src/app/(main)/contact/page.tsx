@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Building, Mail, Phone, Users, MessageSquare, CheckCircle } from 'lucide-react';
+import { Building, Mail, Phone, MessageSquare, CheckCircle } from 'lucide-react';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -302,7 +302,7 @@ export default function ContactPage() {
               <div className="mt-8 pt-8 border-t border-gray-200">
                 <h3 className="text-lg font-medium text-gray-900 mb-4">Looking for help?</h3>
                 <p className="text-gray-600 mb-4">
-                  If you're looking for general support rather than sales assistance, please visit our Help Center.
+                  If you&apos;re looking for general support rather than sales assistance, please visit our Help Center.
                 </p>
                 <Link 
                   href="/help-center" 
@@ -346,7 +346,7 @@ export default function ContactPage() {
             <div className="bg-white rounded-md shadow-sm border border-gray-200 p-6">
               <h3 className="text-lg font-medium text-gray-900 mb-2">Can I change plans or cancel my subscription?</h3>
               <p className="text-gray-600">
-                Yes, you can upgrade, downgrade, or cancel your subscription at any time. When upgrading, you'll get immediate access to new features. When downgrading or canceling, changes will take effect at the end of your current billing cycle.
+                Yes, you can upgrade, downgrade, or cancel your subscription at any time. When upgrading, you&apos;ll get immediate access to new features. When downgrading or canceling, changes will take effect at the end of your current billing cycle.
               </p>
             </div>
           </div>
