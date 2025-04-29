@@ -1,18 +1,9 @@
 import CreatorProfile from '@/components/creator/CreatorProfile';
 
-interface PageProps {
-  params: {
-    id: string;
-  };
-  searchParams: { [key: string]: string | string[] | undefined };
-}
-
 export default async function CreatorPage({
   params,
-  searchParams,
 }: {
   params: { id: string };
-  searchParams: { [key: string]: string | string[] | undefined };
 }) {
   // Simulate fetching creator data
   const creator = {
