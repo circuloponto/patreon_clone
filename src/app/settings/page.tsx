@@ -192,7 +192,7 @@ export default function SettingsPage() {
                         Add an extra layer of security to your account
                       </p>
                     </div>
-                    <AnimatedButton variant={mockSettings.security.twoFactorEnabled ? "outline" : "default"}>
+                    <AnimatedButton variant={mockSettings.security.twoFactorEnabled ? "outline" : "primary"}>
                       {mockSettings.security.twoFactorEnabled ? 'Disable' : 'Enable'}
                     </AnimatedButton>
                   </div>
