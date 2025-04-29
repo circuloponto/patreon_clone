@@ -1,12 +1,13 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { motion, HTMLMotionProps } from 'framer-motion';
+import { ReactNode } from 'react';
 
-interface AnimatedButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface AnimatedButtonProps extends Omit<HTMLMotionProps<"button">, "children" | "className" | "variant" | "fullWidth"> {
   children: ReactNode;
   variant?: 'primary' | 'secondary' | 'outline' | 'danger';
   fullWidth?: boolean;
+  className?: string;
 }
 
 export default function AnimatedButton({ 
@@ -41,11 +42,7 @@ export default function AnimatedButton({
       className={`px-4 py-2 rounded-md font-medium ${baseStyles} ${widthClass} ${className}`}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
-      transition={{
-        type: 'spring',
-        stiffness: 400,
-        damping: 17
-      }}
+      transition={{ type: "spring", stiffness: 400, damping: 10 }}
       {...props}
     >
       {children}
