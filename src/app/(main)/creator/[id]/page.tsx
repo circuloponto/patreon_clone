@@ -4,9 +4,16 @@ interface PageProps {
   params: {
     id: string;
   };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
-export default async function CreatorPage({ params }: PageProps) {
+export default async function CreatorPage({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
   // Simulate fetching creator data
   const creator = {
     id: params.id,
