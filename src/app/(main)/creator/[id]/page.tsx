@@ -1,8 +1,3 @@
-import Image from 'next/image';
-import { Heart, Share2, MessageCircle } from 'lucide-react';
-import PageTransition from '@/components/animations/PageTransition';
-import FadeIn from '@/components/animations/FadeIn';
-import AnimatedButton from '@/components/animations/AnimatedButton';
 import CreatorProfile from '@/components/creator/CreatorProfile';
 
 interface PageProps {
@@ -87,19 +82,15 @@ export default async function CreatorPage({ params }: PageProps) {
   ];
 
   return (
-    <PageTransition>
-      <div className="min-h-screen bg-gray-50">
-        {/* Cover Image */}
-        <div className="h-64 bg-gray-300 relative">
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-        </div>
-
-        <div className="container mx-auto px-4 -mt-16 relative z-10">
-          <FadeIn>
-            <CreatorProfile creator={creator} tiers={tiers} posts={posts} />
-          </FadeIn>
-        </div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Cover Image */}
+      <div className="h-64 bg-gray-300 relative">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
       </div>
-    </PageTransition>
+
+      <div className="container mx-auto px-4 -mt-16 relative z-10">
+        <CreatorProfile creator={creator} tiers={tiers} posts={posts} />
+      </div>
+    </div>
   );
 }
