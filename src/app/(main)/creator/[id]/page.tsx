@@ -10,10 +10,9 @@ interface PageProps {
   params: {
     id: string;
   };
-  searchParams?: { [key: string]: string | string[] | undefined };
 }
 
-export default function CreatorPage({ params, searchParams }: PageProps) {
+export default function CreatorPage({ params }: PageProps) {
   const creator = {
     id: params.id,
     name: "Jane Creator",
